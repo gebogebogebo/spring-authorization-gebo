@@ -2,6 +2,7 @@ package com.example.demo.web
 
 import com.example.demo.service.OidcTokenService
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,7 +20,9 @@ import jakarta.servlet.http.HttpServletRequest
 class UserManagementController(
     private val oidcTokenService: OidcTokenService,
     @Qualifier("default-client-rest-client")
-    private val restClient: RestClient
+    private val restClient: RestClient,
+    @Value("\${app.auth-server.url}")
+    private val authServerUrl: String
 ) {
     data class CreateAccountRequest(
         val username: String,
@@ -45,7 +48,7 @@ class UserManagementController(
         return try {
             val accounts: List<AccountDto> = restClient
                 .get()
-                .uri("http://localhost:9000/api/accounts")
+                .uri("$authServerUrl/api/accounts")
                 .header("Authorization", "Bearer $accessToken")
                 .retrieve()
                 .body(object : ParameterizedTypeReference<List<AccountDto>>() {}) ?: emptyList()
@@ -76,7 +79,7 @@ class UserManagementController(
         return try {
             val created = restClient
                 .post()
-                .uri("http://localhost:9000/api/accounts")
+                .uri("$authServerUrl/api/accounts")
                 .header("Authorization", "Bearer $accessToken")
                 .body(request)
                 .retrieve()

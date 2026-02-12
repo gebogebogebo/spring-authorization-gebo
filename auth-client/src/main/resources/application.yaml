@@ -1,3 +1,8 @@
+# auth-server のベース URL（API 呼び出し・H2 コンソールリンクなどで使用）
+app:
+  auth-server:
+    url: http://localhost:9000
+
 server:
   port: 8080
   # Cookie を `JSESSIONID` から `JSESSIONID-C-G2` に変更
@@ -45,4 +50,4 @@ spring:
             client-name: messaging-client-oidc
         provider:
           spring:
-            issuer-uri: http://localhost:9000
+            issuer-uri: ${app.auth-server.url}

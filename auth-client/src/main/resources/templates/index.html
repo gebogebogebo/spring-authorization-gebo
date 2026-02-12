@@ -10,7 +10,7 @@
     <p>This page is public. No authentication required.</p>
     <p><a href="/home">Login</a></p>
     <p>
-      <a href="http://localhost:9000/h2-console/" target="_blank" rel="noopener noreferrer">
+      <a th:href="|${authServerUrl}/h2-console/|" href="#" target="_blank" rel="noopener noreferrer">
         <button type="button">View Database</button>
       </a>
     </p>
