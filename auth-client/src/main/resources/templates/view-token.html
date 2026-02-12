@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Token</title>
+  </head>
+  <body>
+    <h1>Access Token</h1>
+    <p><a href="/index">Back to Index</a></p>
+    <h2>Raw</h2>
+    <pre th:text="${accessToken} ?: 'No access token'">No access token</pre>
+    <h2>Header</h2>
+    <pre th:text="${accessTokenHeader} ?: 'No access token'">No access token</pre>
+    <h2>Payload</h2>
+    <pre th:text="${accessTokenPayload} ?: 'No access token'">No access token</pre>
+    <h2>exp / iat (JST)</h2>
+    <pre th:text="${accessTokenExpJst} ?: 'No exp'">No exp</pre>
+    <pre th:text="${accessTokenIatJst} ?: 'No iat'">No iat</pre>
+  </body>
+</html>

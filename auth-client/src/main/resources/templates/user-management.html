@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Management</title>
+  </head>
+  <body>
+    <h1>User Management</h1>
+    <p th:if="${errorMessage}" role="alert" th:text="${errorMessage}">Error</p>
+    <p th:if="${accounts != null and #lists.isEmpty(accounts)}">No accounts found.</p>
+    <table
+      th:if="${accounts != null and !#lists.isEmpty(accounts)}"
+      style="border-collapse: collapse;"
+    >
+      <thead>
+        <tr>
+          <th style="border: 1px solid #000; padding: 4px;">Username</th>
+          <th style="border: 1px solid #000; padding: 4px;">Enabled</th>
+          <th style="border: 1px solid #000; padding: 4px;">Roles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="account : ${accounts}">
+          <td style="border: 1px solid #000; padding: 4px;" th:text="${account.username}">username</td>
+          <td style="border: 1px solid #000; padding: 4px;" th:text="${account.enabled}">true</td>
+          <td style="border: 1px solid #000; padding: 4px;" th:text="${#strings.listJoin(account.roles, ', ')}">ROLE_USER</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

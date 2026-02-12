@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth Client G2</title>
+  </head>
+  <body>
+    <h1>Auth Client G2</h1>
+    <p>Login successful.</p>
+    <p><a href="/view-token">View Token</a></p>
+    <p><a href="/user-management">User Management</a></p>
+    <h2>User</h2>
+    <pre th:text="'Username: ' + (${username} ?: 'N/A')">Username: N/A</pre>
+    <pre th:text="'Roles: ' + (${roles} ?: 'N/A')">Roles: N/A</pre>
+    <pre th:text="'Scope: ' + (${scopes} ?: 'N/A')">Scope: N/A</pre>
+    <form th:action="@{/logout}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <button type="submit">Logout</button>
+    </form>
+    <h2>Session</h2>
+    <pre th:text="'ID: ' + (${sessionId} ?: 'N/A')">ID: N/A</pre>
+    <pre th:text="'Created: ' + (${sessionCreatedAt} ?: 'N/A')">Created: N/A</pre>
+    <pre th:text="'Last Accessed: ' + (${sessionLastAccessedAt} ?: 'N/A')">Last Accessed: N/A</pre>
+    <pre th:text="'TTL (seconds): ' + (${sessionTtlSeconds} ?: 'N/A')">TTL (seconds): N/A</pre>
+  </body>
+</html>

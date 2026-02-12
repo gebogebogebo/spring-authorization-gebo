@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  # Cookie を `JSESSIONID` から `JSESSIONID-C-G2` に変更
+  servlet:
+    session:
+      cookie:
+        name: JSESSIONID-C-G2
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+
+spring:
+  application:
+    name: auth-client-g2
+  ssl:
+    bundle:
+      jks:
+        demo-client:
+          key:
+            alias: demo-client-sample
+            password: password
+          keystore:
+            location: classpath:keystore.p12
+            password: password
+            type: PKCS12
+          truststore:
+            location: classpath:keystore.p12
+            password: password
+            type: PKCS12
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging-client-oidc:
+            provider: spring
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            client-name: messaging-client-oidc
+        provider:
+          spring:
+            issuer-uri: http://localhost:9000

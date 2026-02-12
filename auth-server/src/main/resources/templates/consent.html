@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>同意確認ページ - 同意が必要です</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script>
+        function cancelConsent() {
+            document.consent_form.reset();
+            document.consent_form.submit();
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row py-5">
+        <h1 class="text-center text-primary">アプリケーションの権限</h1>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <p>
+                アプリケーション
+                <span class="fw-bold text-primary" th:text="${clientId}"></span>
+                があなたのアカウント
+                <span class="fw-bold" th:text="${principalName}"></span>
+                へのアクセスを要求しています
+            </p>
+        </div>
+    </div>
+    <div th:if="${userCode}" class="row">
+        <div class="col text-center">
+            <p class="alert alert-warning">
+                コード
+                <span class="fw-bold" th:text="${userCode}"></span>
+                が入力されました。このコードがお使いのデバイスに表示されているものと一致することを確認してください。
+            </p>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col text-center">
+            <p>
+                上記のアプリケーションから以下の権限が要求されています。<br/>
+                内容を確認の上、承認する場合は同意してください。
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <form name="consent_form" method="post" th:action="${requestURI}">
+                <input type="hidden" name="client_id" th:value="${clientId}">
+                <input type="hidden" name="state" th:value="${state}">
+                <input th:if="${userCode}" type="hidden" name="user_code" th:value="${userCode}">
+
+                <div th:each="scope: ${scopes}" class="form-check py-1">
+                    <input class="form-check-input"
+                           style="float: none"
+                           type="checkbox"
+                           name="scope"
+                           th:value="${scope.scope}"
+                           th:id="${scope.scope}">
+                    <label class="form-check-label fw-bold px-2" th:for="${scope.scope}" th:text="${scope.scope}"></label>
+                    <p class="text-primary" th:text="${scope.description}"></p>
+                </div>
+
+                <p th:if="${not #lists.isEmpty(previouslyApprovedScopes)}">
+                    上記のアプリケーションに対して、以下の権限はすでに許可されています：
+                </p>
+                <div th:each="scope: ${previouslyApprovedScopes}" class="form-check py-1">
+                    <input class="form-check-input"
+                           style="float: none"
+                           type="checkbox"
+                           th:id="${scope.scope}"
+                           disabled
+                           checked>
+                    <label class="form-check-label fw-bold px-2" th:for="${scope.scope}" th:text="${scope.scope}"></label>
+                    <p class="text-primary" th:text="${scope.description}"></p>
+                </div>
+
+                <div class="pt-3">
+                    <button class="btn btn-primary btn-lg" type="submit" id="submit-consent">
+                        同意する
+                    </button>
+                </div>
+                <div class="pt-3">
+                    <button class="btn btn-link regular" type="button" id="cancel-consent" onclick="cancelConsent();">
+                        キャンセル
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class="col text-center">
+            <p>
+                <small>
+                    アクセス許可への同意が必要です。<br/>
+                    承認しない場合は「キャンセル」をクリックしてください。この場合、アプリケーションに情報は共有されません。
+                </small>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

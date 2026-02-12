@@ -1,0 +1,24 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: auth-server-g2
+  datasource:
+    url: jdbc:h2:./test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  sql:
+    init:
+      schema-locations: classpath:sql/schema.sql
+      mode: always
+      encoding: UTF-8
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: INFO
