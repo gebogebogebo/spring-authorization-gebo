@@ -8,6 +8,7 @@
     <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
   </head>
   <body>
+    <p><a href="/home">/home に戻る</a></p>
     <h1>User Management</h1>
     <p th:if="${errorMessage}" role="alert" th:text="${errorMessage}">Error</p>
 
