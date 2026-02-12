@@ -22,10 +22,11 @@ class SecurityConfig {
 		http
 			.authorizeHttpRequests { authorize ->
 				authorize
-					.requestMatchers("/", "/index", "/webjars/**", "/assets/**", "/jwks", "/logged-out")
+					.requestMatchers("/", "/index", "/webjars/**", "/assets/**", "/jwks", "/logged-out", "/api/initialize")
 					.permitAll()
 					.anyRequest().authenticated()
 			}
+			.csrf { csrf -> csrf.ignoringRequestMatchers("/api/initialize") }
 			.oauth2Login { oauth2Login ->
 				oauth2Login.loginPage("/oauth2/authorization/messaging-client-oidc")
 			}

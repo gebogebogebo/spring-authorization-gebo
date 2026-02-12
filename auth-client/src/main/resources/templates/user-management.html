@@ -4,10 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Management</title>
+    <meta name="_csrf" th:content="${_csrf?.token}" />
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
   </head>
   <body>
     <h1>User Management</h1>
     <p th:if="${errorMessage}" role="alert" th:text="${errorMessage}">Error</p>
+
+    <section style="margin-bottom: 1.5rem;">
+      <h2>Add account</h2>
+      <form id="create-account-form" style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <label>Username <input type="text" name="username" required minlength="1" /></label>
+        <label>Password <input type="password" name="password" required minlength="1" /></label>
+        <label><input type="checkbox" name="enabled" checked /> Enabled</label>
+        <label>Roles <input type="text" name="roles" placeholder="USER, ADMIN" value="USER" /></label>
+        <button type="submit">Add</button>
+      </form>
+      <p id="create-result" role="alert" style="margin-top: 0.5rem; display: none;"></p>
+    </section>
+
     <p th:if="${accounts != null and #lists.isEmpty(accounts)}">No accounts found.</p>
     <table
       th:if="${accounts != null and !#lists.isEmpty(accounts)}"
@@ -28,5 +43,65 @@
         </tr>
       </tbody>
     </table>
+
+    <script th:inline="javascript">
+      (function () {
+        const form = document.getElementById('create-account-form');
+        const resultEl = document.getElementById('create-result');
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const username = form.username.value.trim();
+          const password = form.password.value;
+          const enabled = form.enabled.checked;
+          const rolesStr = form.roles.value.trim() || 'USER';
+          const roles = rolesStr.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+
+          resultEl.style.display = 'none';
+          resultEl.textContent = '';
+
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+          if (csrfToken && csrfHeader) {
+            headers[csrfHeader] = csrfToken;
+          }
+
+          fetch('/user-management/accounts', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({ username: username, password: password, enabled: enabled, roles: roles })
+          })
+            .then(function (res) {
+              if (res.ok) {
+                resultEl.style.color = 'green';
+                resultEl.textContent = 'Account created.';
+                resultEl.style.display = 'block';
+                form.username.value = '';
+                form.password.value = '';
+                form.roles.value = 'USER';
+                window.location.reload();
+                return;
+              }
+              return res.json().then(function (body) {
+                resultEl.style.color = 'red';
+                resultEl.style.display = 'block';
+                if (res.status === 409) {
+                  resultEl.textContent = 'Username already exists.';
+                } else {
+                  resultEl.textContent = body.error || 'Failed to create account.';
+                }
+              });
+            })
+            .catch(function () {
+              resultEl.style.color = 'red';
+              resultEl.style.display = 'block';
+              resultEl.textContent = 'Network error.';
+            });
+        });
+      })();
+    </script>
   </body>
 </html>

@@ -14,5 +14,33 @@
         <button type="button">View Database</button>
       </a>
     </p>
+    <p>
+      <button type="button" id="initialize-btn">Initialize</button>
+      <span id="initialize-result" style="margin-left: 0.5rem;"></span>
+    </p>
+    <script>
+      document.getElementById('initialize-btn').addEventListener('click', function () {
+        var btn = this;
+        var result = document.getElementById('initialize-result');
+        btn.disabled = true;
+        result.textContent = '';
+        fetch('/api/initialize', { method: 'POST' })
+          .then(function (res) { return res.json().then(function (body) { return { ok: res.ok, status: res.status, body: body }; }); })
+          .then(function (r) {
+            if (r.ok) {
+              result.textContent = r.body && r.body.message ? r.body.message : 'Done.';
+              result.style.color = 'green';
+            } else {
+              result.textContent = 'Error (' + r.status + ')';
+              result.style.color = 'red';
+            }
+          })
+          .catch(function () {
+            result.textContent = 'Request failed.';
+            result.style.color = 'red';
+          })
+          .finally(function () { btn.disabled = false; });
+      });
+    </script>
   </body>
 </html>

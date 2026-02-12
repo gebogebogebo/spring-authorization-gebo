@@ -18,6 +18,7 @@ import java.util.UUID
 class InitialDataController(
     private val registeredClientRepository: RegisteredClientRepository,
     private val jdbcUserService: JdbcUserService,
+    private val passwordEncoder: PasswordEncoder,
 ) {
     @PostMapping("/api/initialize")
     fun initialize(): ResponseEntity<Map<String, String>> {
@@ -57,26 +58,50 @@ class InitialDataController(
             registeredClientRepository.save(messagingClient)
         }
 
-        // ユーザーが既に存在する場合はスキップ
+        // ユーザー作成（既存ユーザーはパスワードを BCrypt に更新してログイン可能にする）
+        val encodedPassword = passwordEncoder.encode("password")
         val user1 = "user1"
         if (!jdbcUserService.userExists(user1)) {
-            val user = User.withDefaultPasswordEncoder()
+            val user = User.builder()
                 .username(user1)
-                .password("password")
-                //                .password(passwordEncoder.encode("password"))
+                .password(encodedPassword)
                 .roles("USER")
                 .build()
             jdbcUserService.createUser(user)
+        } else {
+            val existing = jdbcUserService.loadUserByUsername(user1)
+            val updated = User.builder()
+                .username(existing.username)
+                .password(encodedPassword)
+                .authorities(existing.authorities)
+                .accountExpired(!existing.isAccountNonExpired)
+                .accountLocked(!existing.isAccountNonLocked)
+                .credentialsExpired(!existing.isCredentialsNonExpired)
+                .disabled(!existing.isEnabled)
+                .build()
+            jdbcUserService.updateUser(updated)
         }
 
         val admin = "admin"
         if (!jdbcUserService.userExists(admin)) {
-            val user = User.withDefaultPasswordEncoder()
+            val user = User.builder()
                 .username(admin)
-                .password("password")
+                .password(encodedPassword)
                 .roles("ADMIN")
                 .build()
             jdbcUserService.createUser(user)
+        } else {
+            val existing = jdbcUserService.loadUserByUsername(admin)
+            val updated = User.builder()
+                .username(existing.username)
+                .password(encodedPassword)
+                .authorities(existing.authorities)
+                .accountExpired(!existing.isAccountNonExpired)
+                .accountLocked(!existing.isAccountNonLocked)
+                .credentialsExpired(!existing.isCredentialsNonExpired)
+                .disabled(!existing.isEnabled)
+                .build()
+            jdbcUserService.updateUser(updated)
         }
 
         return ResponseEntity.ok(

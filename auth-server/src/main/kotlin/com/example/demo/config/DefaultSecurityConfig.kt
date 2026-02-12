@@ -6,6 +6,10 @@ import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.session.SessionRegistry
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.core.session.SessionRegistryImpl
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
@@ -63,6 +67,30 @@ class DefaultSecurityConfig {
             }
 
         return http.build()
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        val idForEncode = "bcrypt"
+        val bcrypt = BCryptPasswordEncoder()
+        val encoders = mapOf(
+            idForEncode to bcrypt,
+            "noop" to NoOpPasswordEncoder.getInstance()
+        )
+        val delegating = DelegatingPasswordEncoder(idForEncode, encoders)
+        // プレフィックスなしの既存パスワード（従来の BCrypt ハッシュ）も照合できるようにする
+        return object : PasswordEncoder {
+            override fun encode(rawPassword: CharSequence?): String =
+                delegating.encode(rawPassword) ?: ""
+            override fun matches(rawPassword: CharSequence?, encodedPassword: String?): Boolean {
+                if (rawPassword == null || encodedPassword == null) return false
+                return if (encodedPassword.startsWith("{")) {
+                    delegating.matches(rawPassword, encodedPassword)
+                } else {
+                    bcrypt.matches(rawPassword, encodedPassword)
+                }
+            }
+        }
     }
 
     @Bean
