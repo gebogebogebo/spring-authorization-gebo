@@ -17,7 +17,12 @@
         <label>Username <input type="text" name="username" required minlength="1" /></label>
         <label>Password <input type="password" name="password" required minlength="1" /></label>
         <label><input type="checkbox" name="enabled" checked /> Enabled</label>
-        <label>Roles <input type="text" name="roles" placeholder="USER, ADMIN" value="USER" /></label>
+        <label>Roles
+          <select name="roles">
+            <option value="USER" selected>USER</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </label>
         <button type="submit">Add</button>
       </form>
       <p id="create-result" role="alert" style="margin-top: 0.5rem; display: none;"></p>
@@ -56,8 +61,7 @@
           const username = form.username.value.trim();
           const password = form.password.value;
           const enabled = form.enabled.checked;
-          const rolesStr = form.roles.value.trim() || 'USER';
-          const roles = rolesStr.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+          const roles = [form.roles.value];
 
           resultEl.style.display = 'none';
           resultEl.textContent = '';
@@ -81,7 +85,7 @@
                 resultEl.style.display = 'block';
                 form.username.value = '';
                 form.password.value = '';
-                form.roles.value = 'USER';
+                form.roles.selectedIndex = 0;
                 window.location.reload();
                 return;
               }

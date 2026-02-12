@@ -72,10 +72,9 @@ class UserManagementController(
         @RequestBody request: CreateAccountRequest,
         authentication: OAuth2AuthenticationToken?
     ): ResponseEntity<Any> {
-        val accessToken = oidcTokenService.getAccessTokenValue(authentication)
-        if (accessToken == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Access token not found."))
-        }
+        val accessToken = oidcTokenService.getAccessTokenValue(authentication) ?: return ResponseEntity.status(
+            HttpStatus.UNAUTHORIZED
+        ).body(mapOf("error" to "Access token not found."))
         return try {
             val created = restClient
                 .post()
