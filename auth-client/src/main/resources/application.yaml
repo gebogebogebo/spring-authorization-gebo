@@ -26,7 +26,7 @@ spring:
       jks:
         gebo-client:
           key:
-            alias: gebo-client-sample
+            alias: gebo-client-key
             password: password
           keystore:
             location: classpath:keystore.p12
