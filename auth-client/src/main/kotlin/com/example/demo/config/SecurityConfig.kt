@@ -5,14 +5,20 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
+import com.example.demo.service.HttpSessionOAuth2AuthorizedClientService
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
 
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
 class SecurityConfig {
+
+	@Bean
+	fun authorizedClientService(clientRegistrationRepository: ClientRegistrationRepository): OAuth2AuthorizedClientService =
+		HttpSessionOAuth2AuthorizedClientService(clientRegistrationRepository)
 
 	@Bean
 	fun securityFilterChain(
