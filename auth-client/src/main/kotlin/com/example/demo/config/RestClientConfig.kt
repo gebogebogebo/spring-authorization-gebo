@@ -13,11 +13,8 @@ import org.springframework.http.client.ClientHttpRequestFactory
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.http.converter.FormHttpMessageConverter
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
-import org.springframework.security.oauth2.client.endpoint.DefaultOAuth2TokenRequestParametersConverter
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient
-import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest
 import org.springframework.security.oauth2.client.endpoint.OAuth2RefreshTokenGrantRequest
-import org.springframework.security.oauth2.client.endpoint.RestClientClientCredentialsTokenResponseClient
 import org.springframework.security.oauth2.client.endpoint.RestClientRefreshTokenTokenResponseClient
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository
@@ -65,21 +62,6 @@ class RestClientConfig {
 		}
 	}
 
-
-	private fun accessTokenRestClient(
-		clientHttpRequestFactory: Supplier<ClientHttpRequestFactory>
-	): RestClient {
-		return RestClient.builder()
-			.requestFactory(clientHttpRequestFactory.get())
-			.messageConverters { messageConverters ->
-				messageConverters.clear()
-				messageConverters.add(FormHttpMessageConverter())
-				messageConverters.add(OAuth2AccessTokenResponseHttpMessageConverter())
-			}
-			.defaultStatusHandler(OAuth2ErrorResponseErrorHandler())
-			.build()
-	}
-
 	@Bean
 	fun refreshTokenTokenResponseClient(): OAuth2AccessTokenResponseClient<OAuth2RefreshTokenGrantRequest> {
 		val restClient = RestClient.builder()
@@ -91,17 +73,5 @@ class RestClientConfig {
 			.defaultStatusHandler(OAuth2ErrorResponseErrorHandler())
 			.build()
 		return RestClientRefreshTokenTokenResponseClient().apply { setRestClient(restClient) }
-	}
-
-	private fun createClientCredentialsTokenResponseClient(
-		restClient: RestClient
-	): OAuth2AccessTokenResponseClient<OAuth2ClientCredentialsGrantRequest> {
-		val clientCredentialsTokenResponseClient = RestClientClientCredentialsTokenResponseClient()
-		clientCredentialsTokenResponseClient.setParametersConverter(
-			DefaultOAuth2TokenRequestParametersConverter()
-		)
-		clientCredentialsTokenResponseClient.setRestClient(restClient)
-
-		return clientCredentialsTokenResponseClient
 	}
 }
