@@ -20,7 +20,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
 class DefaultSecurityConfig {
-    /** /api/accounts は Authorization: Bearer トークンのみ（JWT の roles で ROLE_ADMIN を要求） */
+    /** /api/accounts およびそのサブパスは Authorization: Bearer トークンのみ（JWT） */
     @Bean
     @Order(1)
     fun apiAccountsSecurityFilterChain(
@@ -36,7 +36,7 @@ class DefaultSecurityConfig {
         }
 
         http
-            .securityMatcher("/api/accounts")
+            .securityMatcher("/api/accounts", "/api/accounts/**")
             .authorizeHttpRequests { authorize ->
                 authorize.anyRequest().authenticated()
             }

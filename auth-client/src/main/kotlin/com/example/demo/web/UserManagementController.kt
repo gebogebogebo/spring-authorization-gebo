@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.client.RestClient
@@ -86,6 +88,27 @@ class UserManagementController(
             ResponseEntity.status(created.statusCode).body(created.body)
         } catch (ex: RestClientResponseException) {
             val body = mapOf("error" to (ex.responseBodyAsString.takeIf { it.isNotBlank() } ?: ex.message ?: "Failed to create account."))
+            ResponseEntity.status(ex.statusCode).body(body)
+        }
+    }
+
+    @DeleteMapping("/user-management/accounts/{username}")
+    fun deleteAccount(
+        @PathVariable username: String,
+        authentication: OAuth2AuthenticationToken?
+    ): ResponseEntity<Any> {
+        val accessToken = oidcTokenService.getAccessTokenValue(authentication)
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Access token not found."))
+        return try {
+            restClient
+                .delete()
+                .uri("$authServerUrl/api/accounts/$username")
+                .header("Authorization", "Bearer $accessToken")
+                .retrieve()
+                .toBodilessEntity()
+            ResponseEntity.noContent().build()
+        } catch (ex: RestClientResponseException) {
+            val body = mapOf("error" to (ex.responseBodyAsString.takeIf { it.isNotBlank() } ?: ex.message ?: "Failed to delete account."))
             ResponseEntity.status(ex.statusCode).body(body)
         }
     }

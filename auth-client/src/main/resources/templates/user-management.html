@@ -20,6 +20,8 @@
       table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
       th, td { border: 1px solid #333; padding: 0.5rem; text-align: left; }
       th { background: #f5f5f5; }
+      .btn-delete { font-size: 0.85rem; padding: 0.25rem 0.5rem; cursor: pointer; }
+      #delete-result { margin-top: 0.5rem; display: none; }
     </style>
   </head>
   <body>
@@ -51,12 +53,14 @@
     <section>
       <h2>Accounts</h2>
       <p th:if="${accounts != null and #lists.isEmpty(accounts)}">No accounts found.</p>
+      <p id="delete-result" class="alert" role="alert"></p>
       <table th:if="${accounts != null and !#lists.isEmpty(accounts)}">
         <thead>
           <tr>
             <th>Username</th>
             <th>Enabled</th>
             <th>Roles</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -64,6 +68,9 @@
             <td th:text="${account.username}">username</td>
             <td th:text="${account.enabled}">true</td>
             <td th:text="${#strings.listJoin(account.roles, ', ')}">ROLE_USER</td>
+            <td>
+              <button type="button" class="btn-delete" th:data-username="${account.username}">削除</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -124,6 +131,38 @@
               resultEl.style.display = 'block';
               resultEl.textContent = 'Network error.';
             });
+        });
+
+        const deleteResultEl = document.getElementById('delete-result');
+        document.querySelectorAll('.btn-delete').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            const username = this.getAttribute('data-username');
+            if (!username || !confirm('「' + username + '」を削除しますか？')) return;
+            deleteResultEl.style.display = 'none';
+            deleteResultEl.textContent = '';
+            const headers = {};
+            if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+            fetch('/user-management/accounts/' + encodeURIComponent(username), { method: 'DELETE', headers: headers })
+              .then(function (res) {
+                if (res.status === 204) {
+                  deleteResultEl.style.color = 'green';
+                  deleteResultEl.textContent = '削除しました。';
+                  deleteResultEl.style.display = 'block';
+                  window.location.reload();
+                  return;
+                }
+                return res.json().then(function (body) {
+                  deleteResultEl.style.color = 'red';
+                  deleteResultEl.style.display = 'block';
+                  deleteResultEl.textContent = body.error || '削除に失敗しました。';
+                });
+              })
+              .catch(function () {
+                deleteResultEl.style.color = 'red';
+                deleteResultEl.style.display = 'block';
+                deleteResultEl.textContent = 'Network error.';
+              });
+          });
         });
       })();
     </script>
