@@ -1,6 +1,7 @@
 package com.example.demo.web
 
 import com.example.demo.service.OidcTokenService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -13,6 +14,7 @@ class ViewTokenController(
     @GetMapping("/view-token")
     fun viewToken(
         model: Model,
+        request: HttpServletRequest,
         authentication: OAuth2AuthenticationToken?
     ): String {
         val accessTokenValue = oidcTokenService.getAccessTokenValue(authentication)
@@ -23,6 +25,7 @@ class ViewTokenController(
         model.addAttribute("accessTokenExpJst", decodedToken?.expJst)
         model.addAttribute("accessTokenIatJst", decodedToken?.iatJst)
         model.addAttribute("accessTokenExpired", decodedToken?.expired ?: false)
+        model.addAttribute("_csrf", request.getAttribute("org.springframework.security.web.csrf.CsrfToken"))
         return "view-token"
     }
 }

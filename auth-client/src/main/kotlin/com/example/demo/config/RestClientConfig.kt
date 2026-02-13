@@ -16,7 +16,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
 import org.springframework.security.oauth2.client.endpoint.DefaultOAuth2TokenRequestParametersConverter
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient
 import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest
+import org.springframework.security.oauth2.client.endpoint.OAuth2RefreshTokenGrantRequest
 import org.springframework.security.oauth2.client.endpoint.RestClientClientCredentialsTokenResponseClient
+import org.springframework.security.oauth2.client.endpoint.RestClientRefreshTokenTokenResponseClient
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository
 import org.springframework.security.oauth2.client.web.client.OAuth2ClientHttpRequestInterceptor
@@ -76,6 +78,19 @@ class RestClientConfig {
 			}
 			.defaultStatusHandler(OAuth2ErrorResponseErrorHandler())
 			.build()
+	}
+
+	@Bean
+	fun refreshTokenTokenResponseClient(): OAuth2AccessTokenResponseClient<OAuth2RefreshTokenGrantRequest> {
+		val restClient = RestClient.builder()
+			.messageConverters { messageConverters ->
+				messageConverters.clear()
+				messageConverters.add(FormHttpMessageConverter())
+				messageConverters.add(OAuth2AccessTokenResponseHttpMessageConverter())
+			}
+			.defaultStatusHandler(OAuth2ErrorResponseErrorHandler())
+			.build()
+		return RestClientRefreshTokenTokenResponseClient().apply { setRestClient(restClient) }
 	}
 
 	private fun createClientCredentialsTokenResponseClient(

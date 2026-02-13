@@ -14,6 +14,9 @@
       pre { margin: 0.25rem 0; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
       .expired { color: #c00; font-weight: 500; }
       .badge { display: inline-block; padding: 0.2em 0.5em; font-size: 0.75rem; font-weight: 600; border-radius: 4px; background: #c00; color: #fff; margin-left: 0.5rem; vertical-align: middle; }
+      .refresh-message { margin: 0.5rem 0; padding: 0.5rem; background: #e7f3ff; border-radius: 4px; }
+      .actions { margin-bottom: 1.5rem; }
+      .actions button { padding: 0.4rem 0.8rem; cursor: pointer; }
     </style>
   </head>
   <body>
@@ -22,6 +25,15 @@
       <h1>Access Token</h1>
       <p style="margin: 0;"><a href="/home">/home に戻る</a></p>
     </header>
+
+    <p th:if="${refreshMessage}" class="refresh-message" th:text="${refreshMessage}">Message</p>
+
+    <section class="actions">
+      <form th:if="${_csrf}" method="post" action="/refresh-token" style="display: inline;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button type="submit">Refresh Token</button>
+      </form>
+    </section>
 
     <section>
       <h2>Raw</h2>
