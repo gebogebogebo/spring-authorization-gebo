@@ -1,21 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>View Token</title>
+    <title>View Token - Spring Authorization Client Demo</title>
+    <style>
+      body { font-family: sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 2rem 1rem; box-sizing: border-box; }
+      .main { width: 100%; max-width: 42rem; }
+      .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+      .header h1 { margin: 0; font-size: 1.5rem; }
+      section { margin-bottom: 1.5rem; }
+      section h2 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+      pre { margin: 0.25rem 0; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+    </style>
   </head>
   <body>
-    <h1>Access Token</h1>
-    <p><a href="/index">Back to Index</a></p>
-    <h2>Raw</h2>
-    <pre th:text="${accessToken} ?: 'No access token'">No access token</pre>
-    <h2>Header</h2>
-    <pre th:text="${accessTokenHeader} ?: 'No access token'">No access token</pre>
-    <h2>Payload</h2>
-    <pre th:text="${accessTokenPayload} ?: 'No access token'">No access token</pre>
-    <h2>exp / iat (JST)</h2>
-    <pre th:text="${accessTokenExpJst} ?: 'No exp'">No exp</pre>
-    <pre th:text="${accessTokenIatJst} ?: 'No iat'">No iat</pre>
+    <main class="main">
+    <header class="header">
+      <h1>Access Token</h1>
+      <p style="margin: 0;"><a href="/home">/home に戻る</a></p>
+    </header>
+
+    <section>
+      <h2>Raw</h2>
+      <pre th:text="${accessToken} ?: 'No access token'">No access token</pre>
+    </section>
+    <section>
+      <h2>Header</h2>
+      <pre th:text="${accessTokenHeader} ?: 'No access token'">No access token</pre>
+    </section>
+    <section>
+      <h2>Payload</h2>
+      <pre th:text="${accessTokenPayload} ?: 'No access token'">No access token</pre>
+    </section>
+    <section>
+      <h2>exp / iat (JST)</h2>
+      <pre th:text="${accessTokenExpJst} ?: 'No exp'">No exp</pre>
+      <pre th:text="${accessTokenIatJst} ?: 'No iat'">No iat</pre>
+    </section>
+    </main>
   </body>
 </html>

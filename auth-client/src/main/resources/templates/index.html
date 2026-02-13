@@ -1,23 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auth Client G2</title>
+    <title>Spring Authorization Client Demo</title>
+    <style>
+      body { font-family: sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 2rem 1rem; box-sizing: border-box; }
+      .main { width: 100%; max-width: 42rem; }
+      .header { margin-bottom: 1.5rem; }
+      .header h1 { margin: 0; font-size: 1.5rem; }
+      section { margin-bottom: 1.5rem; }
+      section h2 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+      p { margin: 0.5rem 0; }
+      .links a { margin-right: 1rem; }
+    </style>
   </head>
   <body>
-    <h1>Auth Client G2</h1>
-    <p>This page is public. No authentication required.</p>
-    <p><a href="/home">Login</a></p>
-    <p>
-      <a th:href="|${authServerUrl}/h2-console/|" href="#" target="_blank" rel="noopener noreferrer">
-        <button type="button">View Database</button>
-      </a>
-    </p>
-    <p>
-      <button type="button" id="initialize-btn">Initialize</button>
-      <span id="initialize-result" style="margin-left: 0.5rem;"></span>
-    </p>
+    <main class="main">
+    <header class="header">
+      <h1>Spring Authorization Client Demo</h1>
+    </header>
+
+    <section>
+      <p>This page is public. No authentication required.</p>
+      <p class="links"><a href="/home">Login</a></p>
+    </section>
+
+    <section>
+      <h2>Tools</h2>
+      <p>
+        <a th:href="|${authServerUrl}/h2-console/|" href="#" target="_blank" rel="noopener noreferrer">
+          <button type="button">View Database</button>
+        </a>
+      </p>
+      <p>
+        <button type="button" id="initialize-btn">Initialize</button>
+        <span id="initialize-result" style="margin-left: 0.5rem;"></span>
+      </p>
+    </section>
+
     <script>
       document.getElementById('initialize-btn').addEventListener('click', function () {
         var btn = this;
@@ -42,5 +63,6 @@
           .finally(function () { btn.disabled = false; });
       });
     </script>
+    </main>
   </body>
 </html>
