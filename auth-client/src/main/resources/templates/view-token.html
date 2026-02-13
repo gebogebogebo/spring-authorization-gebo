@@ -12,6 +12,8 @@
       section { margin-bottom: 1.5rem; }
       section h2 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
       pre { margin: 0.25rem 0; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+      .expired { color: #c00; font-weight: 500; }
+      .badge { display: inline-block; padding: 0.2em 0.5em; font-size: 0.75rem; font-weight: 600; border-radius: 4px; background: #c00; color: #fff; margin-left: 0.5rem; vertical-align: middle; }
     </style>
   </head>
   <body>
@@ -35,7 +37,11 @@
     </section>
     <section>
       <h2>exp / iat (JST)</h2>
-      <pre th:text="${accessTokenExpJst} ?: 'No exp'">No exp</pre>
+      <p style="margin: 0.25rem 0;">
+        <span th:if="${accessTokenExpJst}" th:classappend="${accessTokenExpired} ? 'expired' : ''" th:text="${accessTokenExpJst}">exp</span>
+        <span th:if="${accessTokenExpJst == null or accessTokenExpJst == ''}">No exp</span>
+        <span th:if="${accessTokenExpired}" class="badge">expired</span>
+      </p>
       <pre th:text="${accessTokenIatJst} ?: 'No iat'">No iat</pre>
     </section>
     </main>

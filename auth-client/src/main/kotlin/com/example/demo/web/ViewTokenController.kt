@@ -22,6 +22,7 @@ class ViewTokenController(
         model.addAttribute("accessTokenPayload", decodedToken?.payload)
         model.addAttribute("accessTokenExpJst", decodedToken?.expJst)
         model.addAttribute("accessTokenIatJst", decodedToken?.iatJst)
+        model.addAttribute("accessTokenExpired", decodedToken?.expired ?: false)
         return "view-token"
     }
 }

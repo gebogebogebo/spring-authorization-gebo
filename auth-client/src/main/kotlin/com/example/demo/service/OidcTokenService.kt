@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.stereotype.Service
 import tools.jackson.databind.ObjectMapper
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -17,7 +18,8 @@ class OidcTokenService(
         val header: String,
         val payload: String,
         val expJst: String?,
-        val iatJst: String?
+        val iatJst: String?,
+        val expired: Boolean
     )
 
     private val objectMapper = ObjectMapper()
@@ -45,13 +47,15 @@ class OidcTokenService(
             val writer = objectMapper.writerWithDefaultPrettyPrinter()
             val headerJson = writer.writeValueAsString(signedJwt.header.toJSONObject())
             val payloadJson = writer.writeValueAsString(signedJwt.jwtClaimsSet.toJSONObject())
-            val expJst = signedJwt.jwtClaimsSet.expirationTime?.toInstant()
+            val expInstant = signedJwt.jwtClaimsSet.expirationTime?.toInstant()
+            val expJst = expInstant
                 ?.atZone(jstZoneId)
                 ?.format(jstFormatter)
             val iatJst = signedJwt.jwtClaimsSet.issueTime?.toInstant()
                 ?.atZone(jstZoneId)
                 ?.format(jstFormatter)
-            DecodedJwt(headerJson, payloadJson, expJst, iatJst)
+            val expired = expInstant != null && expInstant.isBefore(Instant.now())
+            DecodedJwt(headerJson, payloadJson, expJst, iatJst, expired)
         } catch (ex: Exception) {
             null
         }
