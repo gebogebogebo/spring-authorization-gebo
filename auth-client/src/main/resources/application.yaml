@@ -24,9 +24,9 @@ spring:
   ssl:
     bundle:
       jks:
-        demo-client:
+        gebo-client:
           key:
-            alias: demo-client-sample
+            alias: gebo-client-sample
             password: password
           keystore:
             location: classpath:keystore.p12

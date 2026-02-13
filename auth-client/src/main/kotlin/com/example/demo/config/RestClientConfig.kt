@@ -49,7 +49,7 @@ class RestClientConfig {
 	@Bean("default-client-http-request-factory")
 	fun defaultClientHttpRequestFactory(sslBundles: SslBundles): Supplier<ClientHttpRequestFactory> {
 		return Supplier {
-			val sslBundle: SslBundle = sslBundles.getBundle("demo-client")
+			val sslBundle: SslBundle = sslBundles.getBundle("gebo-client")
 			val sslContext: SSLContext = sslBundle.createSslContext()
 			val sslConnectionSocketFactory =
 				SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE)
