@@ -34,7 +34,7 @@ class SecurityConfig {
 			}
 			.csrf { csrf -> csrf.ignoringRequestMatchers("/api/initialize") }
 			.oauth2Login { oauth2Login ->
-				oauth2Login.loginPage("/oauth2/authorization/messaging-client-oidc")
+				oauth2Login.loginPage("/oauth2/authorization/gebo-client-oidc")
 			}
 			.oauth2Client(withDefaults())
 			.logout { logout ->

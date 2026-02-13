@@ -40,14 +40,14 @@ spring:
     oauth2:
       client:
         registration:
-          messaging-client-oidc:
+          gebo-client-oidc:
             provider: spring
-            client-id: messaging-client
+            client-id: gebo-client
             client-secret: secret
             authorization-grant-type: authorization_code
             redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
             scope: openid, profile
-            client-name: messaging-client-oidc
+            client-name: gebo-client-oidc
         provider:
           spring:
             issuer-uri: ${app.auth-server.url}

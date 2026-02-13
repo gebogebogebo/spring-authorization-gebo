@@ -24,7 +24,7 @@ class InitialDataController(
     fun initialize(): ResponseEntity<Map<String, String>> {
 
         // クライアントが既に存在する場合はスキップ
-        val clientId = "messaging-client"
+        val clientId = "gebo-client"
         if (registeredClientRepository.findByClientId(clientId) == null) {
             // TODO Spring Security 7.0.2 では デフォルトで PKCE が有効になったので、ここでは無効にする
             // 参考
@@ -40,7 +40,7 @@ class InitialDataController(
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://localhost:8080/login/oauth2/code/messaging-client-oidc")
+                .redirectUri("http://localhost:8080/login/oauth2/code/gebo-client-oidc")
                 .redirectUri("http://localhost:8080/authorized")
                 .postLogoutRedirectUri("http://localhost:8080/")
                 .scope(OidcScopes.OPENID)
