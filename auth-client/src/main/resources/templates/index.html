@@ -12,7 +12,9 @@
       section { margin-bottom: 1.5rem; }
       section h2 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
       p { margin: 0.5rem 0; }
-      .links a { margin-right: 1rem; }
+      .buttons { display: flex; flex-direction: column; gap: 0.75rem; }
+      .buttons a { text-decoration: none; display: block; }
+      .buttons button { width: 100%; min-width: 12rem; padding: 0.75rem 1.25rem; font-size: 1rem; cursor: pointer; }
     </style>
   </head>
   <body>
@@ -22,8 +24,10 @@
     </header>
 
     <section>
-      <p>This page is public. No authentication required.</p>
-      <p class="links"><a href="/home">Login</a></p>
+      <p class="buttons">
+        <a href="/home"><button type="button">Login</button></a>
+        <a th:href="|${authServerUrl}/maintenance|" href="#" target="_blank" rel="noopener noreferrer"><button type="button">メンテナンス</button></a>
+      </p>
     </section>
     </main>
   </body>
