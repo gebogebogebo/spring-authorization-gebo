@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>メンテナンス - Auth Server</title>
+    <style>
+      body { font-family: sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 2rem 1rem; box-sizing: border-box; }
+      .main { width: 100%; max-width: 42rem; }
+      .header { margin-bottom: 1.5rem; }
+      .header h1 { margin: 0; font-size: 1.5rem; }
+      section { margin-bottom: 1.5rem; }
+      section h2 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+      p { margin: 0.5rem 0; }
+    </style>
+  </head>
+  <body>
+    <main class="main">
+    <header class="header">
+      <h1>メンテナンス</h1>
+    </header>
+
+    <section>
+      <p>認証不要のメンテ用メニューです。</p>
+    </section>
+
+    <section>
+      <h2>メニュー</h2>
+      <p>
+        <a href="/h2-console/" target="_blank" rel="noopener noreferrer">
+          <button type="button">View Database</button>
+        </a>
+        H2 コンソールを開きます。
+      </p>
+      <p>
+        <button type="button" id="initialize-btn">Initialize</button>
+        <span id="initialize-result" style="margin-left: 0.5rem;"></span>
+        <br />
+        <span style="font-size: 0.9rem; color: #666;">OAuth2 クライアントと初期ユーザー（user1, admin）を作成します。</span>
+      </p>
+    </section>
+
+    <script>
+      document.getElementById('initialize-btn').addEventListener('click', function () {
+        var btn = this;
+        var result = document.getElementById('initialize-result');
+        btn.disabled = true;
+        result.textContent = '';
+        fetch('/api/initialize', { method: 'POST' })
+          .then(function (res) { return res.json().then(function (body) { return { ok: res.ok, status: res.status, body: body }; }); })
+          .then(function (r) {
+            if (r.ok) {
+              result.textContent = r.body && r.body.message ? r.body.message : 'Done.';
+              result.style.color = 'green';
+            } else {
+              result.textContent = 'Error (' + r.status + ')';
+              result.style.color = 'red';
+            }
+          })
+          .catch(function () {
+            result.textContent = 'Request failed.';
+            result.style.color = 'red';
+          })
+          .finally(function () { btn.disabled = false; });
+      });
+    </script>
+    </main>
+  </body>
+</html>

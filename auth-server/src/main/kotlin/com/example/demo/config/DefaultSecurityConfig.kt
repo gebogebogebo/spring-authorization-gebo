@@ -56,7 +56,7 @@ class DefaultSecurityConfig {
         http
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/assets/**", "/login", "/api/initialize").permitAll()
+                    .requestMatchers("/assets/**", "/login", "/api/initialize", "/maintenance").permitAll()
                     .anyRequest().authenticated()
             }
             .formLogin { formLogin ->
