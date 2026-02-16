@@ -24,8 +24,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("tools.jackson.core:jackson-databind")
-	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 	implementation("tools.jackson.module:jackson-module-kotlin")
 	implementation("org.apache.httpcomponents.client5:httpclient5")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")

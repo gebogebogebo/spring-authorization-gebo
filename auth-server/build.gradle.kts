@@ -20,16 +20,14 @@ repositories {
 }
 
 dependencies {
-	implementation("commons-logging:commons-logging")			// TODO これがなぜひつようなのかわからない
+	implementation("commons-logging:commons-logging")
 	implementation("org.springframework.boot:spring-boot-h2console")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
-	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("org.springframework.security:spring-security-oauth2-authorization-server")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 	implementation("tools.jackson.module:jackson-module-kotlin")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")

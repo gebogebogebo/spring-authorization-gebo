@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,8 +14,13 @@
       section { margin-bottom: 1.5rem; }
       section h2 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
       .alert { margin: 0.5rem 0; }
-      .create-form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+      .group-box { border: 1px solid #999; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: #fafafa; }
+      .group-box .group-box-title { margin: 0 0 1rem 0; font-size: 1rem; font-weight: 600; color: #333; }
+      .create-form { display: flex; flex-direction: column; gap: 0.75rem; }
+      .create-form .form-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
       .create-form label { display: inline-flex; align-items: center; gap: 0.25rem; }
+      .create-form .form-actions { margin-top: 0.5rem; display: flex; justify-content: flex-end; }
+      .create-form .form-actions button { padding: 0.4rem 1rem; cursor: pointer; }
       #create-result { margin-top: 0.5rem; display: none; }
       table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
       th, td { border: 1px solid #333; padding: 0.5rem; text-align: left; }
@@ -28,24 +33,28 @@
     <main class="main">
     <header class="header">
       <h1>User Management</h1>
-      <p style="margin: 0;"><a href="/home">/home に戻る</a></p>
+      <p style="margin: 0;"><a href="/home">Back to /home</a></p>
     </header>
 
     <p th:if="${errorMessage}" class="alert" role="alert" th:text="${errorMessage}">Error</p>
 
-    <section>
-      <h2>Add account</h2>
+    <section class="group-box">
+      <h2 class="group-box-title">Add account</h2>
       <form id="create-account-form" class="create-form">
-        <label>Username <input type="text" name="username" required minlength="1" /></label>
-        <label>Password <input type="password" name="password" required minlength="1" /></label>
-        <label><input type="checkbox" name="enabled" checked /> Enabled</label>
-        <label>Roles
-          <select name="roles">
-            <option value="USER" selected>USER</option>
-            <option value="ADMIN">ADMIN</option>
-          </select>
-        </label>
-        <button type="submit">Add</button>
+        <div class="form-row">
+          <label>Username <input type="text" name="username" required minlength="1" /></label>
+          <label>Password <input type="password" name="password" required minlength="1" /></label>
+          <label><input type="checkbox" name="enabled" checked /> Enabled</label>
+          <label>Roles
+            <select name="roles">
+              <option value="USER" selected>USER</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit">Add</button>
+        </div>
       </form>
       <p id="create-result" role="alert"></p>
     </section>
@@ -60,7 +69,7 @@
             <th>Username</th>
             <th>Enabled</th>
             <th>Roles</th>
-            <th>操作</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -69,7 +78,7 @@
             <td th:text="${account.enabled}">true</td>
             <td th:text="${#strings.listJoin(account.roles, ', ')}">ROLE_USER</td>
             <td>
-              <button type="button" class="btn-delete" th:data-username="${account.username}">削除</button>
+              <button type="button" class="btn-delete" th:data-username="${account.username}">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -137,7 +146,7 @@
         document.querySelectorAll('.btn-delete').forEach(function (btn) {
           btn.addEventListener('click', function () {
             const username = this.getAttribute('data-username');
-            if (!username || !confirm('「' + username + '」を削除しますか？')) return;
+            if (!username || !confirm('Delete "' + username + '"?')) return;
             deleteResultEl.style.display = 'none';
             deleteResultEl.textContent = '';
             const headers = {};
@@ -146,7 +155,7 @@
               .then(function (res) {
                 if (res.status === 204) {
                   deleteResultEl.style.color = 'green';
-                  deleteResultEl.textContent = '削除しました。';
+                  deleteResultEl.textContent = 'Deleted.';
                   deleteResultEl.style.display = 'block';
                   window.location.reload();
                   return;
@@ -154,7 +163,7 @@
                 return res.json().then(function (body) {
                   deleteResultEl.style.color = 'red';
                   deleteResultEl.style.display = 'block';
-                  deleteResultEl.textContent = body.error || '削除に失敗しました。';
+                  deleteResultEl.textContent = body.error || 'Failed to delete.';
                 });
               })
               .catch(function () {
