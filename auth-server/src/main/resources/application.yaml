@@ -1,5 +1,40 @@
 server:
   port: 9000
+
+# JWT 署名用 RSA 鍵（jwt-key.pem の内容を埋め込み。起動時のファイル読み込みなし）。
+app:
+  oauth2:
+    jwt:
+      private-key: |
+        -----BEGIN PRIVATE KEY-----
+        MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCHkKrwa+PEdDiE
+        3QAbr0tqIrlost7uaFUY8twtJlTVgKaNSnNTzOfCMf5bChWoTXaN9KjYaMAbIPbM
+        N4ce5sbx8Hr+AT/UhvzTNpFWYpTopqGsNJAW90zeNpmhDmhOl97BJs2VfEwn2iPV
+        kKHuGtlSw6rh0QSYohaAI/PYrKouZ+FzGLLgcJ0EbeNg+4TlxT+xgLZSCS7/KuM1
+        6QaH9cbz9PoJhX4/V3E84wGpZk68LiEWI2XapstZl0J8se8l45bSDtl3cUtOXbDP
+        pbXnM19j3+OA7t8COPgwa4n0rU+gwbHU33HPXwgXSPuU56uQ/2V2tiafkQKuml/K
+        U9M52yrFAgMBAAECggEAKBtPx1NUDmIH+p7bklU5LYxaaDRLKiNp0bjAFQd7H7Mx
+        EyoMlqVPh698vfhs0d8hDPxuG6BZ/WyyN1bSPf0urJNl/9HkzX6mO+Kv+uutfGsX
+        97eRTYoajr9+khyOFXpu55wQRIKCkWPDKELi9WuyEf9bhfVts654k66PTPJAYvvg
+        hu0GCy/GqkwcJ5KnEvI/E659smAmwq+ClHhUxpLWqfNfb9ECAr50xU8PMD6g+QB1
+        RhzoIpz0WCFDZarzVc+0Q+aoHBf49+GT8wwaKJQFany9QA82HMIIzJJVoLSCx42v
+        l6DJM622c/Hqj4OA05wTeAtwypnH8TXi1OiT42TBHQKBgQC7aXnqfwR93YNLMfsu
+        vedqpAxIhV3EGkHPcKJyxzjYCgLtsZSmLg09GQT27m7GIcBA3kH/4H+xxXZqKuQr
+        O5c+E04mX2Y0C7wcJnikI9TUzriJez5vd0wysM5C8JRHmancRWDoEseM6S75+mb6
+        3QjblkASNN1xBzdPMbxPOWcoywKBgQC5La8/a1coHbrU+d+fjvsGSfHywlVX0UYD
+        HxYNMtwab1at25XtjXzbsaJUag8jauQzZFVz35l+ke2zj/KJX+nLtkb25X/wlu1s
+        TZjK+/F+rgAZ/RMTZZV2pzkCKPJQDRuRoAUYgv/xxvcaZM3EWRyrOhY9G+jPmqlE
+        PLRJ12HYrwKBgGMkw3hIRaoIO2LWSBlMIVaK/myHETmi4lnJLkcmGW5ArZftL8RR
+        7HL7/2JadIOga0Jl0eh5bVQwMBquIhK07afLMraeFUVHR/Zka8H5qqgBzCH+7uKs
+        68SNQDCtcOQH6JI8qa1b8fEbktxvmXbw47S24aJAET2wIZRlrUcECQzNAoGAFwC6
+        zUj7Oat/wucLRVnQivZyjLJhQZhodwjMh3Uy7EG6ZbxqQmkaAnxtaskF+mNT16J2
+        Dv/OpG9iNLUD7tawRzLsW80keHF3KsX03fowBIl+z7ulO/qZd3TMWx1VBGasbwmO
+        uH3FZ3ZMycWN3f8n1YlQq+Skpe1Ta3uS9b1AlVcCgYBO80JtSSZFzb+ZPugIwu/S
+        5UO4InUXPceJWkE28YVZ1i2eQlyGYkbglIPI3RnvrT7Not/xc1anCbARVve5PgiA
+        4/mRUKAugg/fVpORxcHgiSDy/QFd65MpPadzkmUKbq6DDXXd7pMRPcYqbBs6tFz8
+        KZ5HG9IA0dl/1+iK6cfRbg==
+        -----END PRIVATE KEY-----
+
 spring:
   application:
     name: auth-server-g2

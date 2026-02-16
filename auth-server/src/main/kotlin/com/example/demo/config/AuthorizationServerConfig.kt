@@ -1,10 +1,13 @@
 package com.example.demo.config
 
 import com.example.demo.jose.Jwks
+import com.example.demo.jose.RsaKeyLoader
+import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -35,6 +38,10 @@ import java.util.function.Function
 
 @Configuration(proxyBeanMethods = false)
 class AuthorizationServerConfig {
+
+    @Value("\${app.oauth2.jwt.private-key:}")
+    private var privateKeyPem: String = ""
+
     @Bean
     @Order(2)
     fun authorizationServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -88,8 +95,11 @@ class AuthorizationServerConfig {
 
     @Bean
     fun jwkSource(): JWKSource<SecurityContext> {
-        // TODO これDBにおく
-        val rsaKey = Jwks.generateRsa()
+        val rsaKey: RSAKey = if (privateKeyPem.isNotBlank()) {
+            RsaKeyLoader.parsePemToRsaKey(privateKeyPem.trim())
+        } else {
+            Jwks.generateRsa()
+        }
         val jwkSet = JWKSet(rsaKey)
         return JWKSource { jwkSelector: JWKSelector, securityContext: SecurityContext? -> jwkSelector.select(jwkSet) }
     }
