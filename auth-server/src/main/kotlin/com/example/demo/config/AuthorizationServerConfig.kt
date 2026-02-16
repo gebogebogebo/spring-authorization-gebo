@@ -45,12 +45,11 @@ class AuthorizationServerConfig {
     @Bean
     @Order(2)
     fun authorizationServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        // TODO: 公式の参考
+        // 参考
         // https://github.com/spring-projects/spring-security/blob/main/docs/modules/ROOT/pages/servlet/oauth2/authorization-server/getting-started.adoc
-
         http
             .oauth2AuthorizationServer { authorizationServer ->
-                http.securityMatcher(authorizationServer.endpointsMatcher)          // TODO ここが気持ち悪い
+                http.securityMatcher(authorizationServer.endpointsMatcher)
                 authorizationServer.authorizationEndpoint { endpoint ->
                     endpoint.consentPage("/oauth2/consent")
                 }
