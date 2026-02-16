@@ -31,7 +31,6 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 	implementation("tools.jackson.module:jackson-module-kotlin")
-	implementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")

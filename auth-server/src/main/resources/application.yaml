@@ -1,7 +1,9 @@
 server:
   port: 9000
 
-# JWT 署名用 RSA 鍵（jwt-key.pem の内容を埋め込み。起動時のファイル読み込みなし）。
+# private-key に指定する値を生成するコマンド（出力を private-key: | の下に貼り付ける）:
+#   openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt
+#
 app:
   oauth2:
     jwt:
