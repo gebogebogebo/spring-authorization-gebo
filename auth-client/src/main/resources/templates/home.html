@@ -29,7 +29,7 @@
     <section>
       <h2>Account</h2>
       <pre th:text="'Username: ' + (${username} ?: 'N/A')">Username: N/A</pre>
-      <pre th:text="'Roles: ' + (${roles} ?: 'N/A')">Roles: N/A</pre>
+      <pre th:text="'Roles: ' + (${roles} ?: 'N/A')">Roles : N/A</pre>
       <pre th:text="'Scope: ' + (${scopes} ?: 'N/A')">Scope: N/A</pre>
     </section>
 
@@ -41,7 +41,7 @@
       <pre th:text="'TTL (seconds): ' + (${sessionTtlSeconds} ?: 'N/A')">TTL (seconds): N/A</pre>
       <p class="links">
         <a href="/view-token">View Token</a>
-        <a href="/user-management">User Management</a>
+        <a href="/user-management">User Management (Admin only)</a>
       </p>
     </section>
     </main>

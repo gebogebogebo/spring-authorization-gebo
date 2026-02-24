@@ -40,6 +40,7 @@ class HomeController(
         val roles = authentication?.let { loadRolesFromAccessToken(it) }
         val scopes = authorities
             ?.filter { it.startsWith("SCOPE_") }
+
         model.addAttribute("sessionId", session.id)
         model.addAttribute("sessionCreatedAt", createdAt)
         model.addAttribute("sessionLastAccessedAt", lastAccessedAt)
