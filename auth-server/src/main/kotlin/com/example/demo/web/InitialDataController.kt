@@ -23,16 +23,9 @@ class InitialDataController(
     @PostMapping("/api/initialize")
     fun initialize(): ResponseEntity<Map<String, String>> {
 
-        // クライアントが既に存在する場合はスキップ
+        // クライアント作成
         val clientId = "gebo-client"
         if (registeredClientRepository.findByClientId(clientId) == null) {
-            // TODO Spring Security 7.0.2 では デフォルトで PKCE が有効になったので、ここでは無効にする
-            // 参考
-            // org.springframework.security.oauth2.server.authorization.settings.ClientSettings.builder
-            // 	public static Builder builder() {
-            //		return new Builder().requireProofKey(true).requireAuthorizationConsent(false);
-            //	}
-
             val messagingClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId(clientId)
                 .clientSecret(passwordEncoder.encode("secret"))
@@ -51,25 +44,26 @@ class InitialDataController(
                 .clientSettings(
                     ClientSettings.builder()
                         .requireAuthorizationConsent(true)
-                        .requireProofKey(false)         // TODO: これを追加
+                        .requireProofKey(true)          // Spring Security 7.0.2 では デフォルトで PKCE が有効になっているが、明示的に true にする
                         .build())
                 .build()
 
             registeredClientRepository.save(messagingClient)
         }
 
-        // ユーザー作成（既存ユーザーはパスワードを BCrypt に更新してログイン可能にする）
+
+        // ユーザー作成
         val encodedPassword = passwordEncoder.encode("password")
-        val user1 = "user1"
-        if (!jdbcUserService.userExists(user1)) {
+        val admin = "admin"
+        if (!jdbcUserService.userExists(admin)) {
             val user = User.builder()
-                .username(user1)
+                .username(admin)
                 .password(encodedPassword)
-                .roles("USER")
+                .roles("ADMIN")
                 .build()
             jdbcUserService.createUser(user)
         } else {
-            val existing = jdbcUserService.loadUserByUsername(user1)
+            val existing = jdbcUserService.loadUserByUsername(admin)
             val updated = User.builder()
                 .username(existing.username)
                 .password(encodedPassword)
@@ -82,16 +76,16 @@ class InitialDataController(
             jdbcUserService.updateUser(updated)
         }
 
-        val admin = "admin"
-        if (!jdbcUserService.userExists(admin)) {
+        val user1 = "user1"
+        if (!jdbcUserService.userExists(user1)) {
             val user = User.builder()
-                .username(admin)
+                .username(user1)
                 .password(encodedPassword)
-                .roles("ADMIN")
+                .roles("USER")
                 .build()
             jdbcUserService.createUser(user)
         } else {
-            val existing = jdbcUserService.loadUserByUsername(admin)
+            val existing = jdbcUserService.loadUserByUsername(user1)
             val updated = User.builder()
                 .username(existing.username)
                 .password(encodedPassword)
