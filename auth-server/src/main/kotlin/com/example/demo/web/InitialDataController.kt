@@ -45,9 +45,9 @@ class InitialDataController(
                 .postLogoutRedirectUri("http://localhost:8080/")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
-                .scope("message.read")
-                .scope("message.write")
-                .scope("user.read")
+                .scope("users.read")        // GET /api/accounts
+                .scope("users.write")       // POST /api/accounts
+                .scope("users.delete")      // DELETE /api/accounts/{username}
                 .clientSettings(
                     ClientSettings.builder()
                         .requireAuthorizationConsent(true)

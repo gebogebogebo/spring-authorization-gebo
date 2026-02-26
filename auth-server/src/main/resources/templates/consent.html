@@ -10,6 +10,15 @@
             document.consent_form.reset();
             document.consent_form.submit();
         }
+
+        function validateConsent() {
+            const profileCheckbox = document.getElementById('profile');
+            if (profileCheckbox && !profileCheckbox.checked) {
+                alert('「profile」スコープは必須です。同意してください。');
+                return false;
+            }
+            return true;
+        }
     </script>
 </head>
 <body>
@@ -58,8 +67,12 @@
                            type="checkbox"
                            name="scope"
                            th:value="${scope.scope}"
-                           th:id="${scope.scope}">
-                    <label class="form-check-label fw-bold px-2" th:for="${scope.scope}" th:text="${scope.scope}"></label>
+                           th:id="${scope.scope}"
+                           th:checked="${scope.scope == 'profile'}">
+                    <label class="form-check-label fw-bold px-2" th:for="${scope.scope}">
+                        <span th:text="${scope.scope}"></span>
+                        <span th:if="${scope.scope == 'profile'}" class="text-danger">（必須）</span>
+                    </label>
                     <p class="text-primary" th:text="${scope.description}"></p>
                 </div>
 
@@ -78,7 +91,7 @@
                 </div>
 
                 <div class="pt-3">
-                    <button class="btn btn-primary btn-lg" type="submit" id="submit-consent">
+                    <button class="btn btn-primary btn-lg" type="submit" id="submit-consent" onclick="return validateConsent();">
                         同意する
                     </button>
                 </div>

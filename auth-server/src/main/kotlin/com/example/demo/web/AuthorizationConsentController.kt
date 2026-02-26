@@ -63,9 +63,9 @@ class AuthorizationConsentController(
 
             private val scopeDescriptions = mapOf(
                 OidcScopes.PROFILE to "このアプリケーションは、あなたのプロフィール情報を読み取ることができます。",
-                "message.read" to "このアプリケーションはあなたのメッセージを読み取ることができます。",
-                "message.write" to "このアプリケーションでは、新しいメッセージを追加できます。また、既存のメッセージを編集および削除することもできます。",
-                "user.read" to "このアプリケーションは、あなたのユーザー情報を読み取ることができます。",
+                "users.read" to "このアプリケーションは、ユーザー情報を読み取ることができます。",
+                "users.write" to "このアプリケーションは、ユーザーを作成・編集することができます。",
+                "users.delete" to "このアプリケーションは、ユーザーを削除することができます。",
                 "other.scope" to "This is another scope example of a scope description."
             )
         }
