@@ -1,5 +1,6 @@
 package com.example.demo.web
 
+import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames
 import org.springframework.security.oauth2.core.oidc.OidcScopes
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService
@@ -19,6 +20,7 @@ class AuthorizationConsentController(
     @GetMapping(value = ["/oauth2/consent"])
     fun consent(
         principal: Principal,
+        authentication: Authentication,
         model: Model,
         @RequestParam(OAuth2ParameterNames.CLIENT_ID) clientId: String,
         @RequestParam(OAuth2ParameterNames.SCOPE) scope: String,
@@ -41,6 +43,9 @@ class AuthorizationConsentController(
         val scopesToApprove = requestedScopes.filterNot { it in authorizedScopes }.toSet()
         val previouslyApprovedScopes = requestedScopes.filter { it in authorizedScopes }.toSet()
 
+        // ユーザーのロールを取得
+        val isAdmin = authentication.authorities.any { it.authority == "ROLE_ADMIN" }
+
         model.apply {
             addAttribute("clientId", clientId)
             addAttribute("state", state)
@@ -49,6 +54,7 @@ class AuthorizationConsentController(
             addAttribute("principalName", principal.name)
             addAttribute("userCode", userCode)
             addAttribute("requestURI", if (StringUtils.hasText(userCode)) "/oauth2/device_verification" else "/oauth2/authorize")
+            addAttribute("isAdmin", isAdmin)
         }
 
         return "consent"

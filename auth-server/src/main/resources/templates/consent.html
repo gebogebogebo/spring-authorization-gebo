@@ -12,10 +12,28 @@
         }
 
         function validateConsent() {
-            const profileCheckbox = document.getElementById('profile');
-            if (profileCheckbox && !profileCheckbox.checked) {
-                alert('「profile」スコープは必須です。同意してください。');
-                return false;
+            const isAdmin = document.getElementById('isAdminFlag').value === 'true';
+
+            if (isAdmin) {
+                // ROLE_ADMINの場合、すべてのスコープが必須
+                const allCheckboxes = document.querySelectorAll('input[name="scope"]');
+                const uncheckedScopes = [];
+                allCheckboxes.forEach(checkbox => {
+                    if (!checkbox.checked) {
+                        uncheckedScopes.push(checkbox.value);
+                    }
+                });
+                if (uncheckedScopes.length > 0) {
+                    alert('管理者は全てのスコープへの同意が必須です。\n未選択: ' + uncheckedScopes.join(', '));
+                    return false;
+                }
+            } else {
+                // 一般ユーザーの場合、profileのみ必須
+                const profileCheckbox = document.getElementById('profile');
+                if (profileCheckbox && !profileCheckbox.checked) {
+                    alert('「profile」スコープは必須です。同意してください。');
+                    return false;
+                }
             }
             return true;
         }
@@ -60,6 +78,7 @@
                 <input type="hidden" name="client_id" th:value="${clientId}">
                 <input type="hidden" name="state" th:value="${state}">
                 <input th:if="${userCode}" type="hidden" name="user_code" th:value="${userCode}">
+                <input type="hidden" id="isAdminFlag" th:value="${isAdmin}">
 
                 <div th:each="scope: ${scopes}" class="form-check py-1">
                     <input class="form-check-input"
@@ -68,10 +87,11 @@
                            name="scope"
                            th:value="${scope.scope}"
                            th:id="${scope.scope}"
-                           th:checked="${scope.scope == 'profile'}">
+                           th:checked="${scope.scope == 'profile' or isAdmin}">
                     <label class="form-check-label fw-bold px-2" th:for="${scope.scope}">
                         <span th:text="${scope.scope}"></span>
-                        <span th:if="${scope.scope == 'profile'}" class="text-danger">（必須）</span>
+                        <span th:if="${isAdmin}" class="text-danger">（必須）</span>
+                        <span th:if="${!isAdmin and scope.scope == 'profile'}" class="text-danger">（必須）</span>
                     </label>
                     <p class="text-primary" th:text="${scope.description}"></p>
                 </div>
