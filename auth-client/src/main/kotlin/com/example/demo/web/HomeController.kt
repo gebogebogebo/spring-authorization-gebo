@@ -38,8 +38,6 @@ class HomeController(
             ?.mapNotNull { it.authority }
             ?.sorted()
         val roles = authentication?.let { loadRolesFromAccessToken(it) }
-        val scopes = authorities
-            ?.filter { it.startsWith("SCOPE_") }
 
         model.addAttribute("sessionId", session.id)
         model.addAttribute("sessionCreatedAt", createdAt)
@@ -47,7 +45,7 @@ class HomeController(
         model.addAttribute("sessionTtlSeconds", ttlSeconds)
         model.addAttribute("username", username)
         model.addAttribute("roles", roles)
-        model.addAttribute("scopes", scopes)
+        model.addAttribute("authorities", authorities)
         return "home"
     }
 
