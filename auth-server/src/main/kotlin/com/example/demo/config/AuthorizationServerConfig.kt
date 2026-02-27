@@ -44,14 +44,29 @@ class AuthorizationServerConfig {
 
     @Bean
     @Order(2)
-    fun authorizationServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun authorizationServerSecurityFilterChain(
+        http: HttpSecurity,
+        registeredClientRepository: RegisteredClientRepository,
+        authorizationService: JdbcOAuth2AuthorizationService,
+        authorizationConsentService: JdbcOAuth2AuthorizationConsentService
+    ): SecurityFilterChain {
         // 参考
         // https://github.com/spring-projects/spring-security/blob/main/docs/modules/ROOT/pages/servlet/oauth2/authorization-server/getting-started.adoc
+
+        // ダウンスコーピングプロバイダーを作成
+        val downscopingProvider = DownscopingAuthorizationConsentAuthenticationProvider(
+            registeredClientRepository,
+            authorizationService,
+            authorizationConsentService
+        )
+
         http
             .oauth2AuthorizationServer { authorizationServer ->
                 http.securityMatcher(authorizationServer.endpointsMatcher)
                 authorizationServer.authorizationEndpoint { endpoint ->
                     endpoint.consentPage("/oauth2/consent")
+                    // カスタムAuthenticationProviderを追加
+                    endpoint.authenticationProvider(downscopingProvider)
                 }
                 authorizationServer.oidc(Customizer.withDefaults())
             }

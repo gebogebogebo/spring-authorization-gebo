@@ -40,16 +40,28 @@ class AuthorizationConsentController(
         val requestedScopes = StringUtils.delimitedListToStringArray(scope, " ")
             .filterNot { it == OidcScopes.OPENID }
 
-        val scopesToApprove = requestedScopes.filterNot { it in authorizedScopes }.toSet()
-        val previouslyApprovedScopes = requestedScopes.filter { it in authorizedScopes }.toSet()
-
         // ユーザーのロールを取得
         val isAdmin = authentication.authorities.any { it.authority == "ROLE_ADMIN" }
+
+        // ロールに応じて実際に許可するスコープを決定（Downscoping）
+        // この処理はカスタマイザーでも行われるが、画面表示のために必要
+        val allowedScopes = if (isAdmin) {
+            requestedScopes.toSet()
+        } else {
+            requestedScopes.filter { it == OidcScopes.PROFILE }.toSet()
+        }
+
+        // 許可するスコープのうち、まだ承認されていないもの
+        val scopesToApprove = allowedScopes.filterNot { it in authorizedScopes }.toSet()
+
+        // すでに承認済みのスコープ（許可対象のもののみ）
+        val previouslyApprovedScopes = allowedScopes.filter { it in authorizedScopes }.toSet()
 
         model.apply {
             addAttribute("clientId", clientId)
             addAttribute("state", state)
             addAttribute("scopes", withDescription(scopesToApprove))
+            addAttribute("scopesToApprove", scopesToApprove)
             addAttribute("previouslyApprovedScopes", withDescription(previouslyApprovedScopes))
             addAttribute("principalName", principal.name)
             addAttribute("userCode", userCode)
