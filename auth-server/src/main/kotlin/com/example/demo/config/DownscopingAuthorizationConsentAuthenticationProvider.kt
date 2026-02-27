@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
  */
 class DownscopingAuthorizationConsentAuthenticationProvider(
     private val registeredClientRepository: RegisteredClientRepository,
-    private val authorizationService: OAuth2AuthorizationService,
+    authorizationService: OAuth2AuthorizationService,
     private val authorizationConsentService: OAuth2AuthorizationConsentService
 ) : AuthenticationProvider {
 

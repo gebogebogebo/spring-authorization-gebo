@@ -10,13 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
-data class CreateAccountRequest(
-    val username: String,
-    val password: String,
-    val enabled: Boolean = true,
-    val roles: Set<String> = setOf("USER")
-)
-
 @RestController
 class AccountController(
     private val jdbcUserService: JdbcUserService
